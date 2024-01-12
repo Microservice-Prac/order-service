@@ -1,4 +1,4 @@
-package com.example.orderservice.order.domain.entity;
+package com.example.orderservice.order.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -6,7 +6,6 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Builder
 @Getter
@@ -41,16 +40,4 @@ public class OrderEntity implements Serializable {
     @Column(nullable = false, updatable = false, insertable = false)
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
-
-    public OrderEntity calculateTotalPrice() {
-        if (this.quantity != null && this.unitPrice != null) {
-            this.totalPrice = this.quantity * this.unitPrice;
-        }
-        return this;
-    }
-
-    public OrderEntity generateOrderId() {
-        this.orderId = UUID.randomUUID().toString();
-        return this;
-    }
 }

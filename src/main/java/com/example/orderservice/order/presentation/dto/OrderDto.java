@@ -1,7 +1,8 @@
 package com.example.orderservice.order.presentation.dto;
 
 import com.example.orderservice.core.util.ModelMapperUtil;
-import com.example.orderservice.order.domain.entity.OrderEntity;
+import com.example.orderservice.order.application.model.Order;
+import com.example.orderservice.order.domain.OrderEntity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 public class OrderDto {
 
+    @Setter
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -28,18 +30,13 @@ public class OrderDto {
         @NotNull(message = "unitPrice cannot be bull")
         private Integer unitPrice;
 
-        @NotBlank(message = "userId cannot be empty or null")
-        private String userId;
-
-        public OrderEntity toEntity() {
-            return OrderEntity.builder()
-                    .productId(this.productId)
-                    .quantity(this.quantity)
-                    .unitPrice(this.unitPrice)
-                    .userId(this.userId)
-                    .build()
-                    .calculateTotalPrice()
-                    .generateOrderId();
+        public Order toModel(String userId) {
+            return Order.builder()
+                    .productId(productId)
+                    .quantity(quantity)
+                    .unitPrice(unitPrice)
+                    .userId(userId)
+                    .build();
         }
     }
 
@@ -54,7 +51,7 @@ public class OrderDto {
         private Integer quantity;
         private Integer unitPrice;
         private Integer totalPrice;
-        private LocalDateTime createAt;
+        private LocalDateTime createdAt;
         private String orderId;
 
         public static Response of(OrderEntity orderEntity) {
